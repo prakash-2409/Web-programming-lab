@@ -1,0 +1,13 @@
+{
+  "name": "rest-api-express-ajax",
+  "version": "1.0.0",
+  "description": "ML1503 Experiment 7: REST API with Express.js & AJAX Client",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

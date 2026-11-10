@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML1503 - Experiment 4B: Online Quiz System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 25px;
+            display: flex;
+            justify-content: center;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 650px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 0;
+        }
+        .q-card {
+            background: #fafafa;
+            border: 1px solid #e1e4e8;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            transition: border-color 0.3s;
+        }
+        .q-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .opt-label {
+            display: block;
+            margin: 8px 0;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .opt-label:hover {
+            background-color: #eef2f5;
+        }
+        .opt-label input {
+            margin-right: 10px;
+        }
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn-submit:hover {
+            background-color: #218838;
+        }
+        .result-box {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .pass {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .score-text {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .correct-highlight {
+            background-color: #d4edda !important;
+            color: #155724;
+            font-weight: bold;
+        }
+        .wrong-highlight {
+            background-color: #f8d7da !important;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h2>Web Programming Online Quiz System</h2>
+        <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 25px;">
+            Test your fundamental knowledge of HTML, CSS, JavaScript, and Node.js
+        </p>
+
+        <form id="quizForm">
+            <!-- Question 1 -->
+            <div class="q-card" id="card-q1">
+                <div class="q-title">1. What does the HTML acronym stand for?</div>
+                <label class="opt-label"><input type="radio" name="q1" value="A"> Hyper Text Markup Language</label>
+                <label class="opt-label"><input type="radio" name="q1" value="B"> High Text Machine Language</label>
+                <label class="opt-label"><input type="radio" name="q1" value="C"> Hyperlink and Text Marking Level</label>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="q-card" id="card-q2">
+                <div class="q-title">2. Which HTML tag is used to embed an Internal CSS stylesheet?</div>
+                <label class="opt-label"><input type="radio" name="q2" value="A">&lt;script&gt;</label>
+                <label class="opt-label"><input type="radio" name="q2" value="B">&lt;style&gt;</label>
+                <label class="opt-label"><input type="radio" name="q2" value="C">&lt;css&gt;</label>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="q-card" id="card-q3">
+                <div class="q-title">3. Which JavaScript method is used to select an HTML element by its unique ID?</div>
+                <label class="opt-label"><input type="radio" name="q3" value="A"> document.getElementById()</label>
+                <label class="opt-label"><input type="radio" name="q3" value="B"> document.queryId()</label>
+                <label class="opt-label"><input type="radio" name="q3" value="C"> document.findElement()</label>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="q-card" id="card-q4">
+                <div class="q-title">4. Which built-in AngularJS directive is used to loop over and display an array of data?</div>
+                <label class="opt-label"><input type="radio" name="q4" value="A"> ng-loop</label>
+                <label class="opt-label"><input type="radio" name="q4" value="B"> ng-for</label>
+                <label class="opt-label"><input type="radio" name="q4" value="C"> ng-repeat</label>
+            </div>
+
+            <button type="button" class="btn-submit" onclick="evaluateQuiz()">Submit Quiz & View Score</button>
+        </form>
+
+        <!-- Result Box -->
+        <div id="resultBox" class="result-box pass">
+            <div>Quiz Completed!</div>
+            <div id="scoreDisplay" class="score-text"></div>
+            <div id="feedbackText" style="font-size: 15px;"></div>
+            <button type="button" onclick="resetQuiz()" style="margin-top: 15px; padding: 8px 18px; border: none; background: #007bff; color: white; border-radius: 4px; cursor: pointer;">
+                Retake Quiz
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Correct Answer Key
+        const answerKey = {
+            q1: "A",
+            q2: "B",
+            q3: "A",
+            q4: "C"
+        };
+
+        function evaluateQuiz() {
+            let totalQuestions = Object.keys(answerKey).length;
+            let score = 0;
+            let answeredCount = 0;
+
+            // Reset previous highlights
+            for (let q in answerKey) {
+                let card = document.getElementById("card-" + q);
+                card.style.borderColor = "#e1e4e8";
+            }
+
+            for (let q in answerKey) {
+                let selected = document.querySelector(`input[name="${q}"]:checked`);
+                let card = document.getElementById("card-" + q);
+
+                if (selected) {
+                    answeredCount++;
+                    if (selected.value === answerKey[q]) {
+                        score++;
+                        card.style.borderColor = "#28a745";
+                    } else {
+                        card.style.borderColor = "#dc3545";
+                    }
+                } else {
+                    card.style.borderColor = "#ffc107";
+                }
+            }
+
+            if (answeredCount < totalQuestions) {
+                if (!confirm(`You have only answered ${answeredCount} of ${totalQuestions} questions. Do you still want to submit?`)) {
+                    return;
+                }
+            }
+
+            // Display Results
+            let resultBox = document.getElementById("resultBox");
+            let scoreDisplay = document.getElementById("scoreDisplay");
+            let feedback = document.getElementById("feedbackText");
+
+            let percentage = Math.round((score / totalQuestions) * 100);
+            scoreDisplay.innerText = `Score: ${score} / ${totalQuestions} (${percentage}%)`;
+
+            if (score === totalQuestions) {
+                feedback.innerText = "Outstanding! Perfect Score!";
+            } else if (score >= totalQuestions / 2) {
+                feedback.innerText = "Good job! You passed the assessment.";
+            } else {
+                feedback.innerText = "Keep practicing! Review the topics and retake the quiz.";
+            }
+
+            resultBox.style.display = "block";
+            resultBox.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            document.getElementById("quizForm").reset();
+            for (let q in answerKey) {
+                document.getElementById("card-" + q).style.borderColor = "#e1e4e8";
+            }
+            document.getElementById("resultBox").style.display = "none";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="marketApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML1503 - Experiment 6: Supermarket Search & Sort (AngularJS)</title>
+
+    <!-- Local AngularJS with CDN fallback -->
+    <script src="angular.min.js"></script>
+    <script>
+        if (typeof angular === 'undefined') {
+            document.write('<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"><\/script>');
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fa;
+            margin: 0;
+            padding: 30px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 25px 35px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            text-align: center;
+        }
+        .search-panel {
+            background-color: #edf2f7;
+            padding: 16px 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        input[type="text"] {
+            padding: 9px 12px;
+            font-size: 15px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            width: 280px;
+        }
+        select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 11px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #2b6cb0;
+            color: #ffffff;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        tr:hover {
+            background-color: #edf2f7;
+        }
+        .price-tag {
+            color: #2b6cb0;
+            font-weight: bold;
+        }
+        .stock-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            background-color: #e6fffa;
+            color: #234e52;
+        }
+    </style>
+</head>
+<body ng-controller="marketCtrl">
+
+    <div class="container">
+        <h2>Online Supermarket Product Directory</h2>
+        <p style="text-align: center; color: #718096; font-size: 14px;">
+            Search by Product ID or Name &middot; Results displayed of different brands sorted by Price
+        </p>
+
+        <!-- Search & Sort Controls -->
+        <div class="search-panel">
+            <div>
+                <label for="search"><b>Search Products: </b></label>
+                <input type="text" id="search" ng-model="searchText" placeholder="e.g. Milk, Bread, P101...">
+            </div>
+
+            <div>
+                <label><b>Sort by Price: </b></label>
+                <select ng-model="priceOrder">
+                    <option value="asc">Lowest to Highest (Ascending)</option>
+                    <option value="desc">Highest to Lowest (Descending)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Products Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Product ID</th>
+                    <th>Product Name</th>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>Price (Sorted)</th>
+                    <th>Stock Available</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ng-repeat with filter and orderBy directives -->
+                <tr ng-repeat="p in products | filter:searchText | orderBy:'price':(priceOrder === 'desc')">
+                    <td><code>{{p.productId}}</code></td>
+                    <td><b>{{p.name}}</b></td>
+                    <td>{{p.brand}}</td>
+                    <td>{{p.category}}</td>
+                    <td class="price-tag">Rs. {{p.price}}</td>
+                    <td><span class="stock-badge">{{p.stock}} units</span></td>
+                </tr>
+                <tr ng-if="(products | filter:searchText).length === 0">
+                    <td colspan="6" style="text-align: center; color: #e53e3e; font-weight: bold; padding: 20px;">
+                        No matching products found for "{{searchText}}".
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top: 15px; font-size: 13px; color: #718096; text-align: right;">
+            Showing {{ (products | filter:searchText).length }} of {{ products.length }} items
+        </div>
+    </div>
+
+    <script>
+        var app = angular.module("marketApp", []);
+
+        app.controller("marketCtrl", function($scope) {
+            // Default search parameter
+            $scope.searchText = "Milk";
+            $scope.priceOrder = "asc";
+
+            // 10 Products with productId, name, brand, category, price, and stock
+            $scope.products = [
+                { productId: "P101", name: "Milk", brand: "Aavin", category: "Dairy", price: 30, stock: 100 },
+                { productId: "P102", name: "Milk", brand: "Amul", category: "Dairy", price: 34, stock: 80 },
+                { productId: "P103", name: "Milk", brand: "Nestle", category: "Dairy", price: 45, stock: 50 },
+                { productId: "P104", name: "Bread", brand: "Modern", category: "Bakery", price: 40, stock: 60 },
+                { productId: "P105", name: "Bread", brand: "Britannia", category: "Bakery", price: 45, stock: 75 },
+                { productId: "P106", name: "Butter", brand: "Amul", category: "Dairy", price: 55, stock: 90 },
+                { productId: "P107", name: "Cheese Slices", brand: "Go Cheese", category: "Dairy", price: 120, stock: 40 },
+                { productId: "P108", name: "Premium Tea", brand: "Taj Mahal", category: "Beverage", price: 150, stock: 55 },
+                { productId: "P109", name: "Filter Coffee", brand: "Bru", category: "Beverage", price: 180, stock: 65 },
+                { productId: "P110", name: "Glucose Biscuits", brand: "Parle-G", category: "Snacks", price: 20, stock: 200 }
+            ];
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML1503 - Experiment 3: Web Form Validation using DHTML & JavaScript</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        .form-card {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 420px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #444;
+            font-size: 14px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus {
+            border-color: #007bff;
+        }
+        .err {
+            color: #d32f2f;
+            font-size: 12px;
+            font-weight: bold;
+            display: block;
+            margin-top: 4px;
+            min-height: 16px;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 11px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+        .success-box {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-card">
+        <h2>User Registration / Login Form</h2>
+        <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 20px;">
+            Client-Side Scripting & Real-Time Validation
+        </p>
+
+        <form id="regForm" onsubmit="return validateForm()">
+            <!-- Full Name Field -->
+            <div class="form-group">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" placeholder="Enter full name" oninput="validateRealTime('name')">
+                <span id="nameErr" class="err"></span>
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input type="text" id="email" placeholder="e.g. student@college.edu" oninput="validateRealTime('email')">
+                <span id="emailErr" class="err"></span>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="pass">Password:</label>
+                <input type="password" id="pass" placeholder="At least 6 characters" oninput="validateRealTime('pass')">
+                <span id="passErr" class="err"></span>
+            </div>
+
+            <!-- Mobile Field -->
+            <div class="form-group">
+                <label for="phone">10-Digit Mobile Number:</label>
+                <input type="text" id="phone" placeholder="e.g. 9876543210" oninput="validateRealTime('phone')">
+                <span id="phoneErr" class="err"></span>
+            </div>
+
+            <button type="submit" class="btn-submit">Submit / Register</button>
+        </form>
+
+        <div id="successMsg" class="success-box">
+            &#10004; Validation Successful! Form submitted.
+        </div>
+    </div>
+
+    <script>
+        // Real-Time Validation as user types (oninput event)
+        function validateRealTime(field) {
+            let name = document.getElementById("name").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let pass = document.getElementById("pass").value;
+            let phone = document.getElementById("phone").value.trim();
+
+            if (field === 'name') {
+                document.getElementById("nameErr").innerText = 
+                    (name.length > 0 && name.length < 3) ? "Name must be at least 3 characters" : "";
+            }
+            if (field === 'email') {
+                let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                document.getElementById("emailErr").innerText = 
+                    (email.length > 0 && !emailRegex.test(email)) ? "Please enter a valid email (e.g. user@domain.com)" : "";
+            }
+            if (field === 'pass') {
+                document.getElementById("passErr").innerText = 
+                    (pass.length > 0 && pass.length < 6) ? "Password must be at least 6 characters" : "";
+            }
+            if (field === 'phone') {
+                let phoneRegex = /^[0-9]{10}$/;
+                document.getElementById("phoneErr").innerText = 
+                    (phone.length > 0 && !phoneRegex.test(phone)) ? "Mobile number must be exactly 10 digits" : "";
+            }
+        }
+
+        // Final Submit Validation (onsubmit event)
+        function validateForm() {
+            let name = document.getElementById("name").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let pass = document.getElementById("pass").value;
+            let phone = document.getElementById("phone").value.trim();
+
+            let isValid = true;
+            let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            let phoneRegex = /^[0-9]{10}$/;
+
+            // Check Name
+            if (name === "") {
+                document.getElementById("nameErr").innerText = "Name is required";
+                isValid = false;
+            } else if (name.length < 3) {
+                document.getElementById("nameErr").innerText = "Name must be at least 3 characters";
+                isValid = false;
+            } else {
+                document.getElementById("nameErr").innerText = "";
+            }
+
+            // Check Email
+            if (email === "") {
+                document.getElementById("emailErr").innerText = "Email is required";
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                document.getElementById("emailErr").innerText = "Enter a valid email address";
+                isValid = false;
+            } else {
+                document.getElementById("emailErr").innerText = "";
+            }
+
+            // Check Password
+            if (pass === "") {
+                document.getElementById("passErr").innerText = "Password is required";
+                isValid = false;
+            } else if (pass.length < 6) {
+                document.getElementById("passErr").innerText = "Password must be at least 6 characters";
+                isValid = false;
+            } else {
+                document.getElementById("passErr").innerText = "";
+            }
+
+            // Check Mobile
+            if (phone === "") {
+                document.getElementById("phoneErr").innerText = "Mobile number is required";
+                isValid = false;
+            } else if (!phoneRegex.test(phone)) {
+                document.getElementById("phoneErr").innerText = "Mobile must contain exactly 10 digits";
+                isValid = false;
+            } else {
+                document.getElementById("phoneErr").innerText = "";
+            }
+
+            if (isValid) {
+                document.getElementById("successMsg").style.display = "block";
+                alert("Success: Form Submitted Successfully!");
+            } else {
+                document.getElementById("successMsg").style.display = "none";
+            }
+
+            // Prevent default form submission to retain UI state for examiner inspection
+            return false;
+        }
+    </script>
+</body>
+</html>

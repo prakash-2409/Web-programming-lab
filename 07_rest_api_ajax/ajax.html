@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML1503 - Experiment 7: REST API & AJAX Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 750px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-top: 0;
+            color: #1a365d;
+            text-align: center;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-api {
+            background-color: #2b6cb0;
+            color: white;
+        }
+        .btn-api:hover {
+            background-color: #2c5282;
+        }
+        .btn-json {
+            background-color: #319795;
+            color: white;
+        }
+        .btn-json:hover {
+            background-color: #285e61;
+        }
+        .btn-clear {
+            background-color: #e2e8f0;
+            color: #4a5568;
+        }
+        .btn-clear:hover {
+            background-color: #cbd5e0;
+        }
+        .status-box {
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .status-success {
+            background-color: #c6f6d5;
+            color: #22543d;
+            display: block;
+        }
+        .status-error {
+            background-color: #fed7d7;
+            color: #742a2a;
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px 14px;
+            text-align: left;
+        }
+        th {
+            background-color: #edf2f7;
+            color: #2d3748;
+        }
+        .price {
+            font-weight: bold;
+            color: #2b6cb0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Asynchronous AJAX Data Loading & REST API</h2>
+        <p style="text-align: center; color: #4a5568; font-size: 14px;">
+            Fetch and render data asynchronously without reloading the webpage.
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="btn-group">
+            <button class="btn-api" onclick="fetchData('http://localhost:3000/api/products', 'Express REST API')">
+                &#9889; Load via REST API
+            </button>
+            <button class="btn-json" onclick="fetchData('products.json', 'products.json file')">
+                &#128196; Load from JSON File
+            </button>
+            <button class="btn-clear" onclick="clearData()">
+                &#10006; Clear
+            </button>
+        </div>
+
+        <!-- Status Message Banner -->
+        <div id="statusMsg" class="status-box"></div>
+
+        <!-- Dynamic Output Container -->
+        <div id="tableContainer" style="display: none;">
+            <h3>Received Product Records:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Price (Rs.)</th>
+                    </tr>
+                </thead>
+                <tbody id="productRows"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // AJAX Request Function using modern standard Fetch API (with XMLHttpRequest fallback)
+        function fetchData(url, sourceName) {
+            let status = document.getElementById("statusMsg");
+            status.className = "status-box";
+            status.style.display = "block";
+            status.innerText = `Fetching data asynchronously from ${sourceName}...`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    renderData(data, sourceName);
+                })
+                .catch(err => {
+                    status.className = "status-box status-error";
+                    status.innerHTML = `
+                        <b>Failed to fetch from ${sourceName}.</b><br>
+                        Details: ${err.message}<br>
+                        <small>If using REST API, ensure <code>node server.js</code> is running on port 3000. Alternatively, click <b>'Load from JSON File'</b>.</small>
+                    `;
+                    document.getElementById("tableContainer").style.display = "none";
+                });
+        }
+
+        // DOM Manipulation to render JSON objects dynamically
+        function renderData(data, sourceName) {
+            let status = document.getElementById("statusMsg");
+            let tableContainer = document.getElementById("tableContainer");
+            let tbody = document.getElementById("productRows");
+
+            tbody.innerHTML = "";
+            data.forEach(item => {
+                let row = `
+                    <tr>
+                        <td><code>${item.id}</code></td>
+                        <td><b>${item.name}</b></td>
+                        <td>${item.category}</td>
+                        <td class="price">Rs. ${item.price.toLocaleString('en-IN')}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            status.className = "status-box status-success";
+            status.innerText = `✔ Success: Loaded ${data.length} records asynchronously via AJAX (${sourceName})!`;
+            tableContainer.style.display = "block";
+        }
+
+        function clearData() {
+            document.getElementById("statusMsg").style.display = "none";
+            document.getElementById("tableContainer").style.display = "none";
+            document.getElementById("productRows").innerHTML = "";
+        }
+    </script>
+</body>
+</html>

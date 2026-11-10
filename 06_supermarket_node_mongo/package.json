@@ -1,0 +1,13 @@
+{
+  "name": "supermarket-node-mongo",
+  "version": "1.0.0",
+  "description": "ML1503 Experiment 6: Supermarket Node.js & MongoDB CLI Application",
+  "main": "supermarket_cli.js",
+  "scripts": {
+    "start": "node supermarket_cli.js",
+    "search": "node supermarket_cli.js Milk"
+  },
+  "dependencies": {
+    "mongoose": "^8.0.0"
+  }
+}

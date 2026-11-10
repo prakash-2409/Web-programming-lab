@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="shopApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML1503 - Experiment 5: AngularJS Directives & Shopping Cart</title>
+
+    <!-- Load Local AngularJS first; fallback to Google CDN if needed -->
+    <script src="angular.min.js"></script>
+    <script>
+        if (typeof angular === 'undefined') {
+            document.write('<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"><\/script>');
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 25px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 25px 35px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        h2 {
+            color: #1a237e;
+            text-align: center;
+            margin-top: 0;
+        }
+        .toolbar {
+            background-color: #e8eaf6;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #9fa8da;
+        }
+        button {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-toggle {
+            background-color: #5c6bc0;
+            color: white;
+        }
+        .btn-toggle:hover {
+            background-color: #3f51b5;
+        }
+        .btn-submit {
+            background-color: #2e7d32;
+            color: white;
+            font-size: 16px;
+            padding: 10px 24px;
+            margin-top: 15px;
+        }
+        .btn-submit:hover {
+            background-color: #1b5e20;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .product-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 12px;
+            background-color: #fafafa;
+            transition: box-shadow 0.2s;
+        }
+        .product-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        .badge {
+            display: inline-block;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            background-color: #e0e0e0;
+            color: #424242;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px 14px;
+            text-align: left;
+        }
+        th {
+            background-color: #f1f3f4;
+            color: #333;
+        }
+        .total-banner {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+            text-align: right;
+            border: 1px solid #c8e6c9;
+        }
+    </style>
+</head>
+<body ng-controller="shopCtrl">
+
+    <div class="container">
+        <h2>Online Shopping Cart Application (AngularJS)</h2>
+        <p style="text-align: center; color: #555; font-size: 14px; margin-bottom: 20px;">
+            Demonstrating Built-in Directives: <code>ng-app</code>, <code>ng-controller</code>, <code>ng-model</code>, <code>ng-repeat</code>, <code>ng-show</code>, <code>ng-hide</code>, and <code>ng-click</code>.
+        </p>
+
+        <!-- Category Filter & Toggle Directives -->
+        <div class="toolbar">
+            <div>
+                <label><b>Filter by Category: </b></label>
+                <!-- ng-model directive -->
+                <select ng-model="selectedCategory">
+                    <option value="">All Categories</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Groceries">Groceries</option>
+                    <option value="Stationery">Stationery</option>
+                </select>
+            </div>
+
+            <!-- ng-click directive to toggle show/hide -->
+            <button type="button" class="btn-toggle" ng-click="hideProducts = !hideProducts">
+                {{ hideProducts ? '&#128065; Show Product List' : '&#128065; Hide Product List (ng-hide)' }}
+            </button>
+        </div>
+
+        <!-- Product Selection Section (Demonstrating ng-hide & ng-repeat) -->
+        <div ng-hide="hideProducts">
+            <h3>Available Products:</h3>
+            <div class="product-grid">
+                <!-- ng-repeat directive with category filter -->
+                <div class="product-card" ng-repeat="item in products | filter:{category: selectedCategory}">
+                    <label style="cursor: pointer; display: block;">
+                        <input type="checkbox" ng-model="item.selected">
+                        <b style="font-size: 15px; color: #333;">{{item.name}}</b>
+                    </label>
+                    <div style="margin: 8px 0;">
+                        <span class="badge">{{item.category}}</span>
+                    </div>
+                    <div style="color: #007bff; font-weight: bold;">
+                        Rs. {{item.price}}
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn-submit" ng-click="submitCart()">
+                &#128722; Submit Cart & Calculate Total
+            </button>
+        </div>
+
+        <!-- Cart Summary Section (Demonstrating ng-show) -->
+        <div ng-show="cartSubmitted" style="margin-top: 35px; border-top: 2px dashed #9fa8da; padding-top: 20px;">
+            <h3 style="color: #2e7d32;">Items in Your Shopping Cart:</h3>
+
+            <div ng-show="cart.length === 0" style="color: #c62828; font-weight: bold;">
+                Your cart is currently empty! Please select at least one item above.
+            </div>
+
+            <div ng-show="cart.length > 0">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Unit Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="c in cart">
+                            <td>{{$index + 1}}</td>
+                            <td><b>{{c.name}}</b></td>
+                            <td>{{c.category}}</td>
+                            <td>Rs. {{c.price}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="total-banner">
+                    Total Payable Amount: Rs. {{totalAmount}}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // AngularJS Module and Controller definition
+        var app = angular.module("shopApp", []);
+
+        app.controller("shopCtrl", function($scope) {
+            $scope.selectedCategory = "";
+            $scope.hideProducts = false;
+            $scope.cartSubmitted = false;
+            $scope.cart = [];
+            $scope.totalAmount = 0;
+
+            // Product Inventory
+            $scope.products = [
+                { name: "Wireless Bluetooth Mouse", category: "Electronics", price: 650, selected: false },
+                { name: "Mechanical Gaming Keyboard", category: "Electronics", price: 2100, selected: false },
+                { name: "1080p USB Web Camera", category: "Electronics", price: 1850, selected: false },
+                { name: "Organic Honey 500g", category: "Groceries", price: 320, selected: false },
+                { name: "Roasted Almonds 250g", category: "Groceries", price: 420, selected: false },
+                { name: "Green Tea Pack", category: "Groceries", price: 240, selected: false },
+                { name: "Hardcover Spiral Notebook", category: "Stationery", price: 150, selected: false },
+                { name: "Gel Pens Set (Pack of 10)", category: "Stationery", price: 120, selected: false }
+            ];
+
+            // Submit Cart Logic
+            $scope.submitCart = function() {
+                $scope.cart = $scope.products.filter(function(item) {
+                    return item.selected === true;
+                });
+
+                $scope.totalAmount = $scope.cart.reduce(function(sum, item) {
+                    return sum + item.price;
+                }, 0);
+
+                $scope.cartSubmitted = true;
+            };
+        });
+    </script>
+</body>
+</html>

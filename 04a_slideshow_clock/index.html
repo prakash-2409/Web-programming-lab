@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML1503 - Experiment 4A: Image Slideshow & Digital Clock</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            text-align: center;
+            margin: 0;
+            padding: 25px;
+        }
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        /* Clock Styling */
+        .clock-card {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .clock-time {
+            font-size: 38px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 8px 0;
+        }
+        .clock-date {
+            font-size: 16px;
+            color: #d1d8e0;
+        }
+        /* Slideshow Styling */
+        .slideshow-card {
+            padding: 15px;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+        }
+        .slide-img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: opacity 0.4s ease;
+        }
+        .btn-controls {
+            margin-top: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 0 8px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .indicator {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>JavaScript & DOM Demonstration</h1>
+
+        <!-- ================= SECTION 1: DIGITAL CLOCK ================= -->
+        <div class="clock-card">
+            <div style="font-size: 18px; text-transform: uppercase; font-weight: bold;">Digital Clock & Calendar</div>
+            <div id="clockTime" class="clock-time">12:00:00 PM</div>
+            <div id="clockDate" class="clock-date">Loading date...</div>
+        </div>
+
+        <!-- ================= SECTION 2: IMAGE SLIDESHOW ================= -->
+        <div class="slideshow-card">
+            <h2 style="margin-top: 0; color: #333;">Dynamic Image Slideshow</h2>
+            <p style="font-size: 13px; color: #777; margin-bottom: 12px;">Auto-slides every 3 seconds | Previous & Next controls</p>
+            
+            <img id="slideImg" class="slide-img" alt="Slideshow Image">
+            
+            <div class="indicator" id="slideIndicator">Slide 1 of 3</div>
+
+            <div class="btn-controls">
+                <button onclick="changeSlide(-1)">&#10094; Previous</button>
+                <button onclick="changeSlide(1)">Next &#10095;</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ================= 1. DIGITAL CLOCK SCRIPT ================= */
+        function updateClock() {
+            let now = new Date();
+
+            // 12-Hour format with AM/PM
+            let timeString = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+
+            // Date format: Day, Month Date, Year
+            let dateString = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            document.getElementById("clockTime").innerText = timeString;
+            document.getElementById("clockDate").innerText = dateString;
+        }
+        // Update immediately, then every second (1000ms)
+        updateClock();
+        setInterval(updateClock, 1000);
+
+
+        /* ================= 2. IMAGE SLIDESHOW SCRIPT ================= */
+        // High quality standalone SVG data URIs - Works 100% OFFLINE without internet!
+        let slides = [
+            {
+                url: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='260'><rect width='100%' height='100%' fill='%231e3c72'/><text x='50%' y='45%' fill='%23ffffff' font-size='30' font-family='Arial' font-weight='bold' text-anchor='middle'>Slide 1: Web Programming</text><text x='50%' y='65%' fill='%23a5b4fc' font-size='18' font-family='Arial' text-anchor='middle'>HTML5, CSS3, JavaScript DOM</text></svg>",
+                title: "Slide 1 of 3: Web Programming"
+            },
+            {
+                url: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='260'><rect width='100%' height='100%' fill='%230f766e'/><text x='50%' y='45%' fill='%23ffffff' font-size='30' font-family='Arial' font-weight='bold' text-anchor='middle'>Slide 2: Modern Frameworks</text><text x='50%' y='65%' fill='%2399f6e4' font-size='18' font-family='Arial' text-anchor='middle'>AngularJS & Express REST API</text></svg>",
+                title: "Slide 2 of 3: Modern Frameworks"
+            },
+            {
+                url: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='260'><rect width='100%' height='100%' fill='%23701a75'/><text x='50%' y='45%' fill='%23ffffff' font-size='30' font-family='Arial' font-weight='bold' text-anchor='middle'>Slide 3: Database & Cloud</text><text x='50%' y='65%' fill='%23f5d0fe' font-size='18' font-family='Arial' text-anchor='middle'>Node.js & MongoDB Integration</text></svg>",
+                title: "Slide 3 of 3: Database & Cloud"
+            }
+        ];
+
+        let currentIndex = 0;
+
+        function renderSlide() {
+            let img = document.getElementById("slideImg");
+            img.style.opacity = 0.5;
+            setTimeout(() => {
+                img.src = slides[currentIndex].url;
+                document.getElementById("slideIndicator").innerText = `Slide ${currentIndex + 1} of ${slides.length}`;
+                img.style.opacity = 1.0;
+            }, 100);
+        }
+
+        function changeSlide(direction) {
+            currentIndex = (currentIndex + direction + slides.length) % slides.length;
+            renderSlide();
+        }
+
+        // Initial render
+        renderSlide();
+
+        // Automatic sliding every 3 seconds (3000 milliseconds)
+        let autoSlideTimer = setInterval(() => {
+            changeSlide(1);
+        }, 3000);
+    </script>
+</body>
+</html>

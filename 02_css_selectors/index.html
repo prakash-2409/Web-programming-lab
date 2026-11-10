@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML1503 - Experiment 2: CSS Types & Selectors</title>
+
+    <!-- 1. External CSS Link -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- 2. Internal CSS Block with Selectors -->
+    <style>
+        /* (A) Universal Selector (*) - Applies to all elements */
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-sizing: border-box;
+        }
+
+        /* (B) Element Selector (p) - Applies to all <p> elements */
+        p {
+            color: #1a237e;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        /* (C) ID Selector (#unique-para) - High specificity for single unique element */
+        #unique-para {
+            background-color: #fff9c4;
+            color: #f57f17;
+            padding: 10px;
+            border-left: 5px solid #fbc02d;
+            font-weight: bold;
+        }
+
+        /* (D) Class Selector (.highlight) - Reusable across multiple elements */
+        .highlight {
+            color: #b71c1c;
+            background-color: #ffebee;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* (E) Group Selector (h2, h3) - Applies same rules to multiple tags */
+        h2, h3 {
+            color: #00695c;
+            text-decoration: underline;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body style="margin: 25px;">
+
+    <!-- 3. Inline CSS - Applied directly to tag using style attribute -->
+    <h1 style="color: #ffffff; background-color: #0d47a1; padding: 12px; text-align: center; border-radius: 6px;">
+        Experiment 2: Types of CSS & CSS Selectors
+    </h1>
+
+    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 6px; margin-top: 15px;">
+        <h3>Section 1: Demonstrating the 3 Types of Cascading Style Sheets</h3>
+        <ol>
+            <li><b>Inline CSS:</b> Demonstrated in the main heading above with direct blue background.</li>
+            <li><b>Internal CSS:</b> Demonstrated via the &lt;style&gt; block in the &lt;head&gt; section.</li>
+            <li><b>External CSS:</b> Demonstrated via the external stylesheet <code>style.css</code> linked below:</li>
+        </ol>
+
+        <!-- External CSS Box -->
+        <div class="external-box">
+            <h4>Styled via External CSS (style.css)</h4>
+            This green box with dashed border is styled entirely by the external stylesheet <code>style.css</code>.
+        </div>
+    </div>
+
+    <h3>Section 2: Demonstrating CSS Selectors</h3>
+
+    <!-- Element Selector -->
+    <p>
+        <b>1. Element Selector (p):</b> This paragraph is styled with navy blue text using the tag name <code>p</code>.
+    </p>
+
+    <!-- ID Selector -->
+    <p id="unique-para">
+        <b>2. ID Selector (#unique-para):</b> This element is styled uniquely using an ID selector with yellow background and golden left border.
+    </p>
+
+    <!-- Class Selector -->
+    <p>
+        <b>3. Class Selector (.highlight):</b> The following keyword is styled with a reusable class: 
+        <span class="highlight">CRITICAL NOTICE: Web Programming Practical Exam Ready!</span>
+    </p>
+
+    <!-- Group Selector -->
+    <h2>4. Group Selector Header 2 (h2)</h2>
+    <h3>5. Group Selector Header 3 (h3)</h3>
+    <p>Both the <code>h2</code> and <code>h3</code> above share identical teal color and underline styling via a single group rule.</p>
+
+</body>
+</html>

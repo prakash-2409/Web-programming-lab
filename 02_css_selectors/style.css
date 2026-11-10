@@ -1,0 +1,17 @@
+/* External CSS File: style.css */
+
+/* External styling demonstration */
+.external-box {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 15px;
+    margin: 15px 0;
+    border: 2px dashed #4caf50;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.external-box h4 {
+    margin-top: 0;
+    color: #1b5e20;
+}

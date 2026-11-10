@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML1503 - Experiment 1: HTML Elements & Personal Portfolio</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 20px; line-height: 1.6;">
+
+    <!-- 1. Header & Text Formatting -->
+    <h1>My Personal Portfolio</h1>
+    <p>
+        Hello! I am a <b>Web Developer</b> and student pursuing <i>B.E. AIML</i> at <u>SJCE</u>.
+        I love building <mark>interactive web applications</mark> and solving complex problems.
+        <strong>Passionate</strong>, <em>creative</em>, and always ready to learn <del>old habits</del> new technologies!
+    </p>
+    <hr>
+
+    <!-- 2. Hyperlink & Image -->
+    <h3>Profile & Connect</h3>
+    <p>
+        <img src="profile.jpg" alt="Profile Picture" width="130" height="130" style="border-radius: 8px; vertical-align: middle;">
+        <br><br>
+        <a href="https://github.com/prakash-2409" target="_blank">Visit My GitHub Profile</a> | 
+        <a href="#contact">Jump to Contact Form</a>
+    </p>
+
+    <!-- 3. Lists: Unordered, Ordered, and Definition -->
+    <h3>Technical Skills (Unordered List)</h3>
+    <ul>
+        <li>HTML5, CSS3 & JavaScript (ES6+)</li>
+        <li>AngularJS & React</li>
+        <li>Node.js & Express.js</li>
+        <li>MongoDB & MySQL</li>
+    </ul>
+
+    <h3>Career Milestones (Ordered List)</h3>
+    <ol>
+        <li>Completed Web Technology Certification</li>
+        <li>Won 1st Prize in College Hackathon</li>
+        <li>Published Full Stack Web Application on GitHub</li>
+    </ol>
+
+    <h3>Specializations (Description List)</h3>
+    <dl>
+        <dt><b>Front-End:</b></dt>
+        <dd>Semantic HTML5, Responsive CSS3, and DOM Scripting.</dd>
+        <dt><b>Back-End:</b></dt>
+        <dd>REST APIs with Node.js/Express and NoSQL with MongoDB.</dd>
+    </dl>
+
+    <!-- 4. Academic Details Table -->
+    <h3>Academic Qualification (Table)</h3>
+    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 60%; text-align: left;">
+        <tr style="background-color: #f2f2f2;">
+            <th>Course / Degree</th>
+            <th>Institution / Board</th>
+            <th>Year of Passing</th>
+            <th>Percentage / CGPA</th>
+        </tr>
+        <tr>
+            <td>B.E. AIML</td>
+            <td>St. Joseph's College of Engineering</td>
+            <td>2026</td>
+            <td>8.75 CGPA</td>
+        </tr>
+        <tr>
+            <td>HSC (12th)</td>
+            <td>State Board Tamil Nadu</td>
+            <td>2022</td>
+            <td>92.4%</td>
+        </tr>
+        <tr>
+            <td>SSLC (10th)</td>
+            <td>State Board Tamil Nadu</td>
+            <td>2020</td>
+            <td>94.8%</td>
+        </tr>
+    </table>
+
+    <!-- 5. Media Section: Audio and Video Embed -->
+    <h3>Media Showcase (Audio & Video Elements)</h3>
+    <p><b>Audio Track Preview:</b></p>
+    <audio controls>
+        <source src="sample.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <p><b>Project Demo Video:</b></p>
+    <video width="320" height="240" controls style="background-color: #000; border: 1px solid #ccc;">
+        <source src="sample.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- 6. Form with various controls -->
+    <h3 id="contact">Contact Me (Form Controls)</h3>
+    <form action="#" method="get" style="background-color: #f9f9f9; padding: 15px; border: 1px solid #ddd; max-width: 500px;">
+        <label for="name">Full Name:</label><br>
+        <input type="text" id="name" name="name" placeholder="Enter your full name" required style="width: 90%; padding: 6px;"><br><br>
+
+        <label for="email">Email Address:</label><br>
+        <input type="email" id="email" name="email" placeholder="example@mail.com" required style="width: 90%; padding: 6px;"><br><br>
+
+        <label>Gender:</label><br>
+        <input type="radio" id="male" name="gender" value="male" checked>
+        <label for="male">Male</label>
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female">Female</label><br><br>
+
+        <label>Interested Areas:</label><br>
+        <input type="checkbox" id="frontend" name="interest" value="frontend" checked>
+        <label for="frontend">Front-End</label>
+        <input type="checkbox" id="backend" name="interest" value="backend">
+        <label for="backend">Back-End</label>
+        <input type="checkbox" id="ai" name="interest" value="ai">
+        <label for="ai">AI / ML</label><br><br>
+
+        <label for="role">Select Preferred Role:</label><br>
+        <select id="role" name="role" style="padding: 6px;">
+            <option value="intern">Web Development Intern</option>
+            <option value="junior">Junior Full Stack Developer</option>
+            <option value="designer">UI/UX Designer</option>
+        </select><br><br>
+
+        <label for="message">Message / Feedback:</label><br>
+        <textarea id="message" name="message" rows="4" placeholder="Write your message here..." style="width: 90%; padding: 6px;"></textarea><br><br>
+
+        <input type="submit" value="Submit Details" style="padding: 8px 16px; background-color: #007bff; color: white; border: none; cursor: pointer;">
+        <input type="reset" value="Reset Form" style="padding: 8px 16px; margin-left: 10px; cursor: pointer;">
+    </form>
+
+</body>
+</html>
